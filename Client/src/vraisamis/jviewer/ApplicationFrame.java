@@ -66,8 +66,16 @@ public class ApplicationFrame extends JFrame {
     }
 
     private JMenuBar createMenuBar() {
+        JMenuItem jmi;
+        JMenuBar mb = new JMenuBar();
         JMenu mFile = new JMenu("File");
-        JMenuBar jmb = new JMenuBar();
-        return null;
+        jmi = new JMenuItem("Exit");
+        mFile.add(jmi);
+        mb.add(mFile);
+        JMenu mOption = new JMenu("Options");
+        jmi = new JMenuItem("Settings...");
+        mOption.add(jmi);
+        mb.add(mOption);
+        return mb;
     }
 }
