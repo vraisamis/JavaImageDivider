@@ -15,11 +15,13 @@ public class ApplicationFrame extends JFrame {
         jsp.setPreferredSize(new Dimension(800, 600));
         jsp.setResizeWeight(0.5);
         // 左上の作成
-        files = new JTable(testFiles, fileFields);
+        //files = new JTable(testFiles, fileFields);
+        files = new JTable();
         JScrollPane sp1 = new JScrollPane(files);
         sp1.setPreferredSize(new Dimension(400, 300));
         // 左下の作成
-        actions = new JTable(testActions, actionFields);
+        //actions = new JTable(testActions, actionFields);
+        actions = new JTable();
         JScrollPane sp2 = new JScrollPane(actions);
         // 左側の作成
         JSplitPane lPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, sp1, sp2);
@@ -67,13 +69,21 @@ public class ApplicationFrame extends JFrame {
 
     private JMenuBar createMenuBar() {
         JMenuItem jmi;
+        // メニューバーの作成
         JMenuBar mb = new JMenuBar();
-        JMenu mFile = new JMenu("File");
-        jmi = new JMenuItem("Exit");
+        // ファイル
+        JMenu mFile = new JMenu(MenuActionListener.MENU_FILE);
+        // 　フォルダ選択
+        jmi = new JMenuItem(MenuActionListener.ITEM_FOLDERSELECT);
+        mFile.add(jmi);
+        // 　終了
+        jmi = new JMenuItem(MenuActionListener.ITEM_EXIT);
         mFile.add(jmi);
         mb.add(mFile);
-        JMenu mOption = new JMenu("Options");
-        jmi = new JMenuItem("Settings...");
+        // オプション
+        JMenu mOption = new JMenu(MenuActionListener.MENU_OPTION);
+        // 　設定
+        jmi = new JMenuItem(MenuActionListener.ITEM_SETTING);
         mOption.add(jmi);
         mb.add(mOption);
         return mb;
