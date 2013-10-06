@@ -28,8 +28,12 @@ public class MenuActionListener implements ActionListener {
             JFileChooser fc = new JFileChooser();
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int selop = fc.showDialog(parent, "Use Folder");
-            if (selop == JFileChooser.APPROVE_OPTION) parent.SetImageList(fc.getSelectedFile().listFiles(new ImageFileFilter()));
+            if (selop == JFileChooser.APPROVE_OPTION) parent.setImageList(fc.getSelectedFile().listFiles(new ImageFileFilter()));
             return;
+        }
+        
+        if(e.getActionCommand().equals(ITEM_EXIT)) {
+            System.exit(0);
         }
     }
 }
