@@ -93,6 +93,8 @@ public class ApplicationFrame extends JFrame {
     private JLabel graphic;
     private JMenuBar menuBar;
     private MenuActionListener mActionListener;
+    
+    private Command[] actiondata;
 
     public static void main(String[] args) {
         ApplicationFrame appFrame = new ApplicationFrame();
@@ -120,6 +122,14 @@ public class ApplicationFrame extends JFrame {
         JMenu mOption = new JMenu(MenuActionListener.MENU_OPTION);
         // Å@ê›íË
         jmi = new JMenuItem(MenuActionListener.ITEM_SETTING);
+        jmi.addActionListener(mActionListener);
+        mOption.add(jmi);
+        mOption.addSeparator();
+        jmi = new JMenuItem(MenuActionListener.ITEM_LOADSETTING);
+        jmi.addActionListener(mActionListener);
+        mOption.add(jmi);
+        jmi = new JMenuItem(MenuActionListener.ITEM_SAVESETTING);
+        jmi.addActionListener(mActionListener);
         mOption.add(jmi);
         mb.add(mOption);
         return mb;
@@ -140,5 +150,9 @@ public class ApplicationFrame extends JFrame {
     public void setImageFromRow(int row) {
         Object o = files.getValueAt(row, 1);
         graphic.setIcon(new ImageIcon(o.toString()));
+    }
+    
+    public Command[] getActions() {
+        return actiondata;
     }
 }
