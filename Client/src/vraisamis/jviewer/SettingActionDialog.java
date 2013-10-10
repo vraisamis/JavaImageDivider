@@ -16,12 +16,15 @@ import java.io.File;
 
 import java.util.LinkedList;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -96,8 +99,10 @@ public class SettingActionDialog extends JDialog {
     
     public SettingActionDialog(ApplicationFrame frame, String string, boolean b) {
         super(frame, string, b);
+        this.frame = frame;
     }
     
+    private ApplicationFrame frame;
     private Command[] actions;
     private JTable table;
     private DefaultTableModel dtm;
@@ -105,13 +110,17 @@ public class SettingActionDialog extends JDialog {
         "Key", "Keyword", "Directory"
     };
     private JButton addButton, deleteButton, exitButton;
+    private JTextField keyText, keywordText, dirText;
+    private JButton folderBrowseButton;
     private int selected;
     private JDialog selfDlg;
     
     public void init(Command[] commands) {
+        this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
         this.selfDlg = this;
         setBounds(0, 0, 400, 300);
         this.selected = -1;
+        // create table
         this.dtm = new DefaultTableModel(captions, 0);
         this.table = new JTable(dtm);
         if ((this.actions = commands) != null) {
@@ -129,16 +138,42 @@ public class SettingActionDialog extends JDialog {
         tcm.getColumn(0).setPreferredWidth(30);
         tcm.getColumn(1).setPreferredWidth(100);
         tcm.getColumn(2).setPreferredWidth(240);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         JScrollPane jsp = new JScrollPane(table);
-        this.add(table, BorderLayout.CENTER);
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        jsp.setBounds(0, 0, 370, 200);
+        this.add(jsp);
+        // create inputer
+        JPanel panel;
+        panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        keyText = new JTextField(2);
+        panel.add(keyText);
+        keywordText = new JTextField(8);
+        panel.add(keywordText);
+        dirText = new JTextField(15);
+        panel.add(dirText);
+        folderBrowseButton = new JButton("Browse...");
+        folderBrowseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // TODO このメソッドを実装
+                JFileChooser fc = new JFileChooser();
+                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int selop = fc.showDialog(selfDlg, "Select dst folder");
+                if (selop == JFileChooser.APPROVE_OPTION) dirText.setText(fc.getSelectedFile().toString());
+
+            }
+        });
+        panel.add(folderBrowseButton);
+        this.add(panel);
+        // create buttons
+        panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         addButton = new JButton("Add");
         panel.add(addButton);
         deleteButton = new JButton("Delete");
         panel.add(deleteButton);
         exitButton = new JButton("Exit");
         panel.add(exitButton);
-        this.add(panel, BorderLayout.SOUTH);
+        this.add(panel);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         ListSelectionModel lsm = table.getSelectionModel();
@@ -156,6 +191,24 @@ public class SettingActionDialog extends JDialog {
                 selected = lsm.getMinSelectionIndex();
             }
         });
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // TODO このメソッドを実装
+                if (keyText.getText().length() != 1) return;
+                if (keywordText.getText().length() == 0) return;
+                if (dirText.getText().length() == 0) return;
+                String[] strs = {
+                    keyText.getText(),
+                    keywordText.getText(),
+                    dirText.getText()
+                };
+                keyText.setText("");
+                keywordText.setText("");
+                dirText.setText("");
+                dtm.addRow(strs);
+            }
+            });
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -164,12 +217,24 @@ public class SettingActionDialog extends JDialog {
                 dtm.removeRow(selected);
             }
         });
-        JDialog parentDlg = this;
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO このメソッドを実装
+                LinkedList<Command> l = new LinkedList<Command>();
+                DefaultTableModel d = frame.getActionsTableModel();
+                for (int i = 0, n = dtm.getRowCount(); i < n; i++) {
+                    l.add(new Command(
+                        dtm.getValueAt(i, 0).toString().charAt(0),
+                        dtm.getValueAt(i, 1).toString(),
+                        new File(dtm.getValueAt(i, 2).toString())
+                    ));
+                }
+                Command[] cc = new Command[l.size()];
+                for (int i = 0, n = l.size(); i < n; i++) cc[i] = l.pollFirst();
+                frame.setActions(cc);
                 processWindowEvent(new WindowEvent(selfDlg, WindowEvent.WINDOW_CLOSING));
+                //System.out.println(frame.getActionsTable().getRowCount());
             }
         });
     }

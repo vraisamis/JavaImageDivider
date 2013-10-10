@@ -155,4 +155,17 @@ public class ApplicationFrame extends JFrame {
     public Command[] getActions() {
         return actiondata;
     }
+    public void setActions(Command[] cc) {
+        this.actiondata = cc;
+        while(actions.getRowCount() != 0) actions.removeRow(0);
+        for (Command c : actiondata) this.actions.addRow(c.toStrings());
+    }
+    
+    public JTable getActionsTable() {
+        return tactions;
+    }
+    
+    public DefaultTableModel getActionsTableModel() {
+        return actions;
+    }
 }

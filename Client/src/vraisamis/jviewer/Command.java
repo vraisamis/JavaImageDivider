@@ -16,15 +16,19 @@ public class Command {
     private String keyword;
     private File dir;
 
-    String getKeyString() {
-        return new Integer(key).toString();
+    public String getKeyString() {
+        return new Character((char)key).toString();
     }
 
-    String getKeyWord() {
+    public String getKeyWord() {
         return keyword;
     }
 
-    File getDirectory() {
+    public File getDirectory() {
         return dir;
+    }
+    
+    public String[] toStrings() {
+        return new String[]{getKeyString(),getKeyWord(),getDirectory().toString()};
     }
 }
