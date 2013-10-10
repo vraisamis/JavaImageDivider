@@ -3,10 +3,15 @@ package vraisamis.jviewer;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Frame;
 
 import java.io.File;
 
+import java.util.LinkedList;
+
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 
 public class MenuActionListener implements ActionListener {
     public MenuActionListener(ApplicationFrame parent) {
@@ -18,6 +23,8 @@ public class MenuActionListener implements ActionListener {
     public static final String ITEM_FOLDERSELECT = "Select Folder";
     public static final String MENU_OPTION = "Option";
     public static final String ITEM_SETTING = "Settings";
+    public static final String ITEM_LOADSETTING = "Load Setting File";
+    public static final String ITEM_SAVESETTING = "Save Setting File";
     
     private ApplicationFrame parent;
 
@@ -33,6 +40,22 @@ public class MenuActionListener implements ActionListener {
         }
         
         if(e.getActionCommand().equals(ITEM_EXIT)) {
+            System.exit(0);
+        }
+        
+        if(e.getActionCommand().equals(ITEM_SETTING)) {
+            LinkedList<Command> l = new LinkedList<Command>();
+            SettingActionDialog dlg = new SettingActionDialog(parent, "Settings", true);
+            dlg.init(parent.getActions());
+            dlg.setVisible(true);
+            
+        }
+        
+        if(e.getActionCommand().equals(ITEM_LOADSETTING)) {
+            System.exit(0);
+        }
+        
+        if(e.getActionCommand().equals(ITEM_SAVESETTING)) {
             System.exit(0);
         }
     }
