@@ -158,7 +158,10 @@ public class ApplicationFrame extends JFrame {
     public void setActions(Command[] cc) {
         this.actiondata = cc;
         while(actions.getRowCount() != 0) actions.removeRow(0);
-        for (Command c : actiondata) this.actions.addRow(c.toStrings());
+        for (Command c : actiondata) {
+            this.actions.addRow(c.toStrings());
+            this.tfiles.addKeyListener(c);
+        }
     }
     
     public JTable getActionsTable() {
@@ -167,5 +170,9 @@ public class ApplicationFrame extends JFrame {
     
     public DefaultTableModel getActionsTableModel() {
         return actions;
+    }
+    
+    public void deleteActionsOperation() {
+        for (Command c: actiondata) tfiles.removeKeyListener(c);
     }
 }

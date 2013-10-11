@@ -237,5 +237,7 @@ public class SettingActionDialog extends JDialog {
                 //System.out.println(frame.getActionsTable().getRowCount());
             }
         });
+        
+        frame.deleteActionsOperation();
     }
 }
