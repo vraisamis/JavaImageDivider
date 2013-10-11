@@ -68,6 +68,8 @@ public class ApplicationFrame extends JFrame {
         // メニューの作成とセット
         menuBar = this.createMenuBar();
         this.setJMenuBar(menuBar);
+        
+        tfiles.addKeyListener(new FilesTableListener(this, files, tfiles.getSelectionModel()));
    }
 
     private static String[] fileFields = {
@@ -157,12 +159,16 @@ public class ApplicationFrame extends JFrame {
     }
     public void setActions(Command[] cc) {
         this.actiondata = cc;
-        while(actions.getRowCount() != 0) actions.removeRow(0);
-        for (Command c : actiondata) {
-            this.actions.addRow(c.toStrings());
-            this.tfiles.addKeyListener(c);
+        Object[][] oo = new Object[cc.length][];
+        for(int i = 0; i < cc.length; i++) {
+            oo[i] = new Object[]{
+                cc[i].getKeyString(),
+                cc[i].getKeyWord(),
+                cc[i].getDirectory().toString()
+            };
         }
-    }
+        actions.setDataVector(oo, actionFields);
+  }
     
     public JTable getActionsTable() {
         return tactions;
@@ -173,6 +179,9 @@ public class ApplicationFrame extends JFrame {
     }
     
     public void deleteActionsOperation() {
-        for (Command c: actiondata) tfiles.removeKeyListener(c);
+    }
+    
+    public DefaultTableModel getFilesTableModel() {
+        return files;
     }
 }

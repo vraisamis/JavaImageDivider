@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 import java.io.File;
 
-public class Command implements KeyListener{
+public class Command {
     public Command(int key, File dir) {
         
     }
@@ -33,22 +33,5 @@ public class Command implements KeyListener{
     
     public String[] toStrings() {
         return new String[]{getKeyString(),getKeyWord(),getDirectory().toString()};
-    }
-
-    @Override
-    public void keyTyped(KeyEvent keyEvent) {
-        return;
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // TODO ‚±‚Ìƒƒ\ƒbƒh‚ğÀ‘•
-        if (e.getKeyCode() != this.key) return;
-        
-    }
-
-    @Override
-    public void keyReleased(KeyEvent keyEvent) {
-        return;
     }
 }
