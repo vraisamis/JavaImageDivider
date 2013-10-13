@@ -2,6 +2,8 @@ package vraisamis.jviewer;
 
 import java.awt.Dimension;
 
+import java.awt.event.ActionEvent;
+
 import java.io.File;
 
 import java.util.LinkedList;
@@ -69,9 +71,23 @@ public class ApplicationFrame extends JFrame {
         menuBar = this.createMenuBar();
         this.setJMenuBar(menuBar);
         
-        tfiles.addKeyListener(new FilesTableListener(this, files, tfiles.getSelectionModel()));
+        //tactions.addKeyListener(new FilesTableListener(this, files, tfiles.getSelectionModel()));
+        keymap = new FilesTableListener(this, files, tfiles.getSelectionModel(),
+                                        tfiles.getActionMap(), tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW));
+//        Command c = new Command('c', "aaa", new File("c:/"));
+//        tkey = KeyStroke.getKeyStroke('c');
+//        tfiles.getActionMap().put(c, new AbstractAction() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                // TODO Ç±ÇÃÉÅÉ\ÉbÉhÇé¿ëï
+//                System.out.println(e.getActionCommand());
+//                System.out.println(tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).get(KeyStroke.getKeyStroke(e.getActionCommand().charAt(0))).getClass());
+//            }
+//        });
+//        tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(tkey, c);
    }
 
+    private KeyStroke tkey;
     private static String[] fileFields = {
         "dst", "FileName", "FileSize"
     };
@@ -95,6 +111,7 @@ public class ApplicationFrame extends JFrame {
     private JLabel graphic;
     private JMenuBar menuBar;
     private MenuActionListener mActionListener;
+    private FilesTableListener keymap;
     
     private Command[] actiondata;
 
@@ -158,16 +175,24 @@ public class ApplicationFrame extends JFrame {
         return actiondata;
     }
     public void setActions(Command[] cc) {
+        ActionMap am = tfiles.getActionMap();
+        InputMap im = tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        am.clear();
+        im.clear();
         this.actiondata = cc;
-        Object[][] oo = new Object[cc.length][];
+        actions.setRowCount(0);
+        Object[] o;// = new Object[cc.length][];
         for(int i = 0; i < cc.length; i++) {
-            oo[i] = new Object[]{
+            o = new Object[]{
                 cc[i].getKeyString(),
-                cc[i].getKeyWord(),
+                cc[i].getKeyword(),
                 cc[i].getDirectory().toString()
             };
+            actions.addRow(o);
+            am.put(cc[i], keymap);
+            im.put(cc[i].getKeyStroke(), cc[i]);
         }
-        actions.setDataVector(oo, actionFields);
+        //actions.setDataVector(oo, actionFields);
   }
     
     public JTable getActionsTable() {

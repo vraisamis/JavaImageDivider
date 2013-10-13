@@ -10,6 +10,8 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 
 import java.io.File;
@@ -128,7 +130,7 @@ public class SettingActionDialog extends JDialog {
             for (Command c: actions) {
                 Object[] os = new Object[3];
                 os[0] = c.getKeyString();
-                os[1] = c.getKeyWord();
+                os[1] = c.getKeyword();
                 os[2] = c.getDirectory();
                 li.add(os);
             }
@@ -146,10 +148,30 @@ public class SettingActionDialog extends JDialog {
         JPanel panel;
         panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         keyText = new JTextField(2);
+        keyText.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                // TODO このメソッドを実装
+                //System.out.println("Typed" + e.getKeyChar());
+                keyText.setText("");
+                e.setKeyChar(Character.toLowerCase(e.getKeyChar()));
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // TODO このメソッドを実装
+                //System.out.println("Pressed" + e.getKeyChar());
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+                // TODO このメソッドを実装
+                //System.out.println("Released" + e.getKeyChar());
+            }
+        });
         panel.add(keyText);
         keywordText = new JTextField(8);
         panel.add(keywordText);
-        dirText = new JTextField(15);
+        dirText = new JTextField(13);
+        dirText.setEditable(false);
         panel.add(dirText);
         folderBrowseButton = new JButton("Browse...");
         folderBrowseButton.addActionListener(new ActionListener() {
@@ -222,7 +244,7 @@ public class SettingActionDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 // TODO このメソッドを実装
                 LinkedList<Command> l = new LinkedList<Command>();
-                DefaultTableModel d = frame.getActionsTableModel();
+                //DefaultTableModel d = frame.getActionsTableModel();
                 for (int i = 0, n = dtm.getRowCount(); i < n; i++) {
                     l.add(new Command(
                         dtm.getValueAt(i, 0).toString().charAt(0),
