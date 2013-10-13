@@ -44,7 +44,7 @@ public class MenuActionListener implements ActionListener {
         }
         
         if(e.getActionCommand().equals(ITEM_SETTING)) {
-            LinkedList<Command> l = new LinkedList<Command>();
+            //LinkedList<Command> l = new LinkedList<Command>();
             SettingActionDialog dlg = new SettingActionDialog(parent, "Settings", true);
             dlg.init(parent.getActions());
             dlg.setVisible(true);

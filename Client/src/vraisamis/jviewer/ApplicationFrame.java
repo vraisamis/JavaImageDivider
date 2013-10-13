@@ -2,6 +2,8 @@ package vraisamis.jviewer;
 
 import java.awt.Dimension;
 
+import java.awt.event.ActionEvent;
+
 import java.io.File;
 
 import java.util.LinkedList;
@@ -68,8 +70,24 @@ public class ApplicationFrame extends JFrame {
         // メニューの作成とセット
         menuBar = this.createMenuBar();
         this.setJMenuBar(menuBar);
+        
+        //tactions.addKeyListener(new FilesTableListener(this, files, tfiles.getSelectionModel()));
+        keymap = new FilesTableListener(this, files, tfiles.getSelectionModel(),
+                                        tfiles.getActionMap(), tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW));
+//        Command c = new Command('c', "aaa", new File("c:/"));
+//        tkey = KeyStroke.getKeyStroke('c');
+//        tfiles.getActionMap().put(c, new AbstractAction() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                // TODO このメソッドを実装
+//                System.out.println(e.getActionCommand());
+//                System.out.println(tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).get(KeyStroke.getKeyStroke(e.getActionCommand().charAt(0))).getClass());
+//            }
+//        });
+//        tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(tkey, c);
    }
 
+    private KeyStroke tkey;
     private static String[] fileFields = {
         "dst", "FileName", "FileSize"
     };
@@ -93,6 +111,7 @@ public class ApplicationFrame extends JFrame {
     private JLabel graphic;
     private JMenuBar menuBar;
     private MenuActionListener mActionListener;
+    private FilesTableListener keymap;
     
     private Command[] actiondata;
 
@@ -156,10 +175,25 @@ public class ApplicationFrame extends JFrame {
         return actiondata;
     }
     public void setActions(Command[] cc) {
+        ActionMap am = tfiles.getActionMap();
+        InputMap im = tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        am.clear();
+        im.clear();
         this.actiondata = cc;
-        while(actions.getRowCount() != 0) actions.removeRow(0);
-        for (Command c : actiondata) this.actions.addRow(c.toStrings());
-    }
+        actions.setRowCount(0);
+        Object[] o;// = new Object[cc.length][];
+        for(int i = 0; i < cc.length; i++) {
+            o = new Object[]{
+                cc[i].getKeyString(),
+                cc[i].getKeyword(),
+                cc[i].getDirectory().toString()
+            };
+            actions.addRow(o);
+            am.put(cc[i], keymap);
+            im.put(cc[i].getKeyStroke(), cc[i]);
+        }
+        //actions.setDataVector(oo, actionFields);
+  }
     
     public JTable getActionsTable() {
         return tactions;
@@ -167,5 +201,12 @@ public class ApplicationFrame extends JFrame {
     
     public DefaultTableModel getActionsTableModel() {
         return actions;
+    }
+    
+    public void deleteActionsOperation() {
+    }
+    
+    public DefaultTableModel getFilesTableModel() {
+        return files;
     }
 }
