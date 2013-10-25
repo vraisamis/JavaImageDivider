@@ -4,6 +4,8 @@ import java.awt.Dimension;
 
 import java.awt.event.ActionEvent;
 
+import java.awt.event.KeyEvent;
+
 import java.io.File;
 
 import java.util.LinkedList;
@@ -71,6 +73,8 @@ public class ApplicationFrame extends JFrame {
         menuBar = this.createMenuBar();
         this.setJMenuBar(menuBar);
         
+        this.move = false;
+        
         //tactions.addKeyListener(new FilesTableListener(this, files, tfiles.getSelectionModel()));
         keymap = new FilesTableListener(this, files, tfiles.getSelectionModel(),
                                         tfiles.getActionMap(), tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW));
@@ -114,8 +118,12 @@ public class ApplicationFrame extends JFrame {
     private FilesTableListener keymap;
     
     private Command[] actiondata;
+    private boolean move;
+    private File[] imageFiles;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, InstantiationException,
+                                                  IllegalAccessException, UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         ApplicationFrame appFrame = new ApplicationFrame();
         appFrame.setTitle("Testあ");
         appFrame.setVisible(true);
@@ -151,14 +159,27 @@ public class ApplicationFrame extends JFrame {
         jmi.addActionListener(mActionListener);
         mOption.add(jmi);
         mb.add(mOption);
+        // オペレーション
+        JMenu mOperation = new JMenu(MenuActionListener.MENU_OPERATION);
+        //  実行
+        jmi = new JMenuItem(MenuActionListener.ITEM_EXECUTE);
+        jmi.addActionListener(mActionListener);
+        mOperation.add(jmi);
+        mb.add(mOperation);
         return mb;
     }
     
+    public File[] getImageList() {
+        return imageFiles;
+    }
+    
     public void setImageList(File[] images) {
+        this.imageFiles = images;
+        files.setRowCount(0);
         LinkedList<Object[]> li = new LinkedList<Object[]>();
         for (File f: images) {
             Object[] os = new Object[3];
-            os[0] = "";
+            os[0] = null;
             os[1] = f.getAbsolutePath();
             os[2] = f.length();
             li.add(os);
@@ -174,6 +195,7 @@ public class ApplicationFrame extends JFrame {
     public Command[] getActions() {
         return actiondata;
     }
+    
     public void setActions(Command[] cc) {
         ActionMap am = tfiles.getActionMap();
         InputMap im = tfiles.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -192,6 +214,8 @@ public class ApplicationFrame extends JFrame {
             am.put(cc[i], keymap);
             im.put(cc[i].getKeyStroke(), cc[i]);
         }
+        am.put(cc[0], keymap);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), cc[0]);
         //actions.setDataVector(oo, actionFields);
   }
     
@@ -208,5 +232,12 @@ public class ApplicationFrame extends JFrame {
     
     public DefaultTableModel getFilesTableModel() {
         return files;
+    }
+    
+    public boolean getMoveEnable() {
+        return this.move;
+    }
+    public void setMoveEnable(boolean b) {
+        this.move = b;
     }
 }

@@ -20,6 +20,7 @@ import java.util.LinkedList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -116,6 +117,7 @@ public class SettingActionDialog extends JDialog {
     private JButton folderBrowseButton;
     private int selected;
     private JDialog selfDlg;
+    private JCheckBox move;
     
     public void init(Command[] commands) {
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
@@ -187,6 +189,11 @@ public class SettingActionDialog extends JDialog {
         });
         panel.add(folderBrowseButton);
         this.add(panel);
+        // create checkbox
+        move = new JCheckBox("Move", frame.getMoveEnable());
+        panel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        panel.add(move);
+        this.add(panel);
         // create buttons
         panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         addButton = new JButton("Add");
@@ -253,8 +260,10 @@ public class SettingActionDialog extends JDialog {
                     ));
                 }
                 Command[] cc = new Command[l.size()];
+                frame.setMoveEnable(move.isSelected());
                 for (int i = 0, n = l.size(); i < n; i++) cc[i] = l.pollFirst();
-                frame.setActions(cc);
+                if (dtm.getRowCount() > 0) frame.setActions(cc);
+                frame.setMoveEnable(move.isSelected());
                 processWindowEvent(new WindowEvent(selfDlg, WindowEvent.WINDOW_CLOSING));
                 //System.out.println(frame.getActionsTable().getRowCount());
             }

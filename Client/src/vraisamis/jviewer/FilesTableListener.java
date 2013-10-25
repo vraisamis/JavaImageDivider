@@ -31,8 +31,15 @@ public class FilesTableListener extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO ‚±‚Ìƒƒ\ƒbƒh‚ğÀ‘•
+        if (lsm.getMinSelectionIndex() < 0) return;
+        if ("\u001B".equals(e.getActionCommand())) {
+            System.out.println(e.getActionCommand().getBytes());
+            dtm.setValueAt(null, lsm.getMinSelectionIndex(), 0);
+            return;
+        }
         System.out.println(e.getActionCommand() + "::::" + im.get(KeyStroke.getKeyStroke(e.getActionCommand().charAt(0))));
         if (dtm.getRowCount() <= 0) return;
         dtm.setValueAt(im.get(KeyStroke.getKeyStroke(e.getActionCommand().charAt(0))), lsm.getMinSelectionIndex(), 0);
+        if (dtm.getRowCount() > lsm.getMinSelectionIndex() && dtm.getRowCount() > lsm.getMaxSelectionIndex()) lsm.setSelectionInterval(lsm.getMinSelectionIndex() + 1, lsm.getMaxSelectionIndex() + 1);
     }
 }
