@@ -22,7 +22,8 @@ public class FileListSelectionListener implements ListSelectionListener {
         if (lsm.isSelectionEmpty()) {
         } else {
             int row = lsm.getMinSelectionIndex();
-            if (row >= 0 && row < parent.getActionsTableModel().getRowCount()) parent.setImageFromRow(row);
+            System.out.println("row is " + row);
+            if (row >= 0 && row < parent.getFilesTableModel().getRowCount()) parent.setImageFromRow(row);
         }
     }
 }

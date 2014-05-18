@@ -1,11 +1,22 @@
 package vraisamis.jviewer;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Frame;
 
 import java.io.File;
+
+import java.io.FileReader;
+import java.io.FileWriter;
+
+import java.io.IOException;
 
 import java.util.LinkedList;
 
@@ -54,10 +65,29 @@ public class MenuActionListener implements ActionListener {
         }
         
         if(e.getActionCommand().equals(ITEM_LOADSETTING)) {
+            JsonReader jr = null;
+            try {
+                jr = new JsonReader(new FileReader("./setting.ini"));
+                Command[] cm = new Gson().fromJson(jr, Command[].class);
+                parent.setActions(cm);
+            } catch (IOException ex) {
+            } finally {
+                try {jr.close();} catch (IOException ex) { }
+            }
             //System.exit(0);
         }
         
         if(e.getActionCommand().equals(ITEM_SAVESETTING)) {
+            //GsonBuilder gb = new GsonBuilder();
+            Gson gson = new Gson();
+            JsonWriter jw = null;
+            try {
+                jw = new JsonWriter(new FileWriter("./setting.ini"));
+                gson.toJson(parent.getActions(), Command[].class, jw);
+            } catch (IOException f) {
+            } finally {
+                try {jw.close();} catch (IOException f) { }
+            }
             //System.exit(0);
         }
         
