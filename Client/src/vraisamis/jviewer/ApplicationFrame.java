@@ -188,8 +188,14 @@ public class ApplicationFrame extends JFrame {
         for (Object[] os : li) files.addRow(os);
     }
     public void setImageFromRow(int row) {
-        Object o = files.getValueAt(row, 1);
-        graphic.setIcon(new ImageIcon(o.toString()));
+        try {
+            Object o = files.getValueAt(row, 1);
+            graphic.setIcon(new ImageIcon(o.toString()));
+            graphic.revalidate();
+            System.out.println("img:revalidated");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public Command[] getActions() {
