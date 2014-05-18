@@ -1,3 +1,4 @@
 .data/
 *.class
 *.jpr
+*.ini
