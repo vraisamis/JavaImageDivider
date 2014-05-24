@@ -30,9 +30,10 @@ public class ApplicationFrame extends JFrame {
         jsp.setPreferredSize(new Dimension(800, 600));
         jsp.setResizeWeight(0.5);
         // âEë§ÇÃçÏê¨
-        graphic = new JLabel();
-        graphic.setHorizontalAlignment(SwingConstants.LEFT);
-        graphic.setVerticalAlignment(SwingConstants.TOP);
+        graphic = new ImagePanel();
+        //graphic = new JLabel();
+        //graphic.setHorizontalAlignment(SwingConstants.LEFT);
+        //graphic.setVerticalAlignment(SwingConstants.TOP);
         JScrollPane spGraphic = new JScrollPane(graphic, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         // ç∂è„ÇÃçÏê¨
         files = new FileTableModel(fileFields, 0);
@@ -112,7 +113,7 @@ public class ApplicationFrame extends JFrame {
     private DefaultTableModel files;
     private JTable tactions;
     private DefaultTableModel actions;
-    private JLabel graphic;
+    private ImagePanel graphic;
     private JMenuBar menuBar;
     private MenuActionListener mActionListener;
     private FilesTableListener keymap;
@@ -190,9 +191,10 @@ public class ApplicationFrame extends JFrame {
     public void setImageFromRow(int row) {
         try {
             Object o = files.getValueAt(row, 1);
-            graphic.setIcon(new ImageIcon(o.toString()));
-            graphic.revalidate();
-            System.out.println("img:revalidated");
+            //graphic.setIcon(new ImageIcon(o.toString()));
+            //graphic.revalidate();
+            graphic.setImage(new ImageIcon(o.toString()));
+            // System.out.println("img:revalidated");
         } catch (Exception e) {
             e.printStackTrace();
         }
